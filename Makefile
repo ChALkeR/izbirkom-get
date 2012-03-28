@@ -52,7 +52,7 @@ downloadUrl	= $(baseUrlHttp)$(initalUrl)
 
 sedify		= | replace '/' '\/' '&' '\&'
 
-all: data-2-html-clean.tar.xz data-3-csv-raw.tar.xz data-4-csv-links.tar.xz
+all: data-2-html-clean.tar.xz data-3-csv-raw.tar.xz data-4-csv-links.tar.xz data-5-csv-light.tar.xz
 
 test:
 	@echo "$(downloadUrl)"
@@ -88,6 +88,12 @@ data-links.csv: data-raw.csv
 		| replace ' Файл' ' Файл; Ссылка' \
 		> $@
 
+data-light.csv: data-raw.csv
+	cat data-raw.csv \
+		| sed -r "s/; tvd([0-9]*)\.vibid([0-9]*)\.html//" \
+		| replace '; Файл' '' \
+		> $@
+
 url-list.txt:
 	ls $(host)/region/region/ | sed "s/^/"`echo "$(baseUrlHttp)" $(sedify)`"/" > $@
 
@@ -105,9 +111,12 @@ data-2-html-clean.tar.xz: data-html-clean
 
 data-3-csv-raw.tar.xz: data-raw.csv
 	tar -caf $@ data-raw.csv
-	
+
 data-4-csv-links.tar.xz: data-links.csv
 	tar -caf $@ data-links.csv
+
+data-5-csv-light.tar.xz: data-links.csv
+	tar -caf $@ data-light.csv
 
 info:
 	du -hs $(baseUrl);
