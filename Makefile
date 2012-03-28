@@ -1,10 +1,34 @@
+#################################################
+# This sets the election number and type
+#
+# Examples
+# 2011-12-04: vrn=100100028713299, type=233
+# 2012-03-04: vrn=100100031793505, type=227
+#
+#################################################
+vrn		= 100100028713299
+type		= 233
+#################################################
+
+
+#################################################
+# We need to specify some region to get all data.
+# This doesn't affect the data.
+# This probably doesn't need to be changed.
+#################################################
 regionNum	= 78
 regionName	= st-petersburg
-vrn		= 100100028713299
+#################################################
 
+
+#################################################
+# Adress parameters.
+# This doesn't need to be changed.
+#################################################
 host		= www.$(regionName).vybory.izbirkom.ru
 baseUrl		= $(host)/region/region/
-initalUrl	= $(regionName)?action=show&vrn=$(vrn)&type=233
+initalUrl	= $(regionName)?action=show&vrn=$(vrn)&type=$(type)
+#################################################
 
 test:
 	@echo "http://$(baseUrl)$(initalUrl)"
@@ -19,7 +43,7 @@ data-html-all: $(host)
 	cp -r $(baseUrl) $@;
 	cd $@; \
 		rm -f "$(initalUrl)"; \
-		rename "&type=233" ".html" -- *; \
+		rename "&type=$(type)" ".html" -- *; \
 		rename "$(regionName)?action=show&tvd=" "tvd" -- *; \
 		rename "&vrn=$(vrn)&region=$(regionNum)&global=null&sub_region=$(regionNum)&prver=0&pronetvd=null&vibid=" ".vibid" -- *; \
 
@@ -39,7 +63,7 @@ data-raw.csv: data-html-clean
 	
 data-links.csv: data-raw.csv
 	cat data-raw.csv \
-		| sed -r ' s/ tvd([0-9]*)\.vibid([0-9]*)\.html/\0; http:\/\/$(host)\/region\/region\/$(regionName)?action=show\&tvd=\1\&vrn=$(vrn)\&region=$(regionNum)\&global=null\&sub_region=$(regionNum)\&prver=0\&pronetvd=null\&vibid=\2\&type=233/' \
+		| sed -r ' s/ tvd([0-9]*)\.vibid([0-9]*)\.html/\0; http:\/\/$(host)\/region\/region\/$(regionName)?action=show\&tvd=\1\&vrn=$(vrn)\&region=$(regionNum)\&global=null\&sub_region=$(regionNum)\&prver=0\&pronetvd=null\&vibid=\2\&type=$(type)/' \
 		| replace ' Файл' ' Файл; Ссылка' \
 		> $@
 		
