@@ -69,26 +69,23 @@ data-html-all: $(host)
 		rename "$(part0)" "tvd" -- *; \
 		rename "$(part1)" ".vibid" -- *; \
 
-# LANG=ru_RU.cp1251 grep `echo 'УИК' | iconv -t cp1251` *.html -L
-# and
-# grep "TEXT-DECORATION: none" *.html -l
-# does the same
-
 data-html-clean: data-html-all
 	rm -rf $@;
 	cp -r data-html-all $@;
 	cd $@; \
 		grep "TEXT-DECORATION: none" *.html -l | xargs rm; \
+		# same as
+		# LANG=ru_RU.cp1251 grep `echo 'УИК' | iconv -t cp1251` *.html -L | xargs rm; \
 
 data-raw.csv: data-html-clean
 	./extract.sh data-html-clean $(fields) > $@;
-	
+
 data-links.csv: data-raw.csv
 	cat data-raw.csv \
 		| sed -r "s/ tvd([0-9]*)\.vibid([0-9]*)\.html/\0; "`echo "$(baseUrlHttp)$(part0)" $(sedify)`"\1"` echo "$(part1)" $(sedify)`"\2"` echo "$(part2)" $(sedify)`"/" \
 		| replace ' Файл' ' Файл; Ссылка' \
 		> $@
-		
+
 url-list.txt:
 	ls $(host)/region/region/ | sed "s/^/"`echo "$(baseUrlHttp)" $(sedify)`"/" > $@
 
