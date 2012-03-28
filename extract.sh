@@ -13,6 +13,15 @@ function parse_file() {
 		| sed -r 's/(\r|<[^>]*>)//g' \
 		| sed -r 's/(^\s*|\s*$)//g' \
 		| iconv -f cp1251 -t utf-8`"
+	local catg="`cat "$file" \
+		| grep '&gt;' \
+		| iconv -f cp1251 -t utf-8 \
+		| sed -r 's/(\r|<[^>]*>)//g' \
+		| sed -r 's/(^\s*|\s*$)//g' \
+		| sed -r 's/&gt;\s*//' \
+		| grep '&gt;' \
+		| sed -r 's/\s*&gt;.*//g'
+		`"
 	local data=`cat "$file" \
 		| grep '<td width="90%">' -A $inf \
 		| grep '</table><br></div></td>' -B $inf \
@@ -32,7 +41,7 @@ function parse_file() {
 
 	for ((i=0; i<$width; i++))
 	do
-		echo -n "$name; "
+		echo -n "$catg; $name; "
 		local rowNums=''
 		for ((j=0; j<=$height; j++))
 		do
@@ -55,7 +64,7 @@ function show_head {
 		| grep ' ' \
 		| iconv -f cp1251 -t utf-8 \
 		| head -$fields`
-	echo -n "ИК; УИК; "
+	echo -n "Регион; ИК; УИК; "
 	echo "$data" | tr '\n' ';' | replace ';' '; '
 	echo "Файл"
 }
