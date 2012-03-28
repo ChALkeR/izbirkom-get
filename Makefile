@@ -52,6 +52,8 @@ downloadUrl	= $(baseUrlHttp)$(initalUrl)
 
 sedify		= | replace '/' '\/' '&' '\&'
 
+all: data-2-html-clean.tar.xz data-3-csv-raw.tar.xz data-4-csv-links.tar.xz
+
 test:
 	@echo "$(downloadUrl)"
 
