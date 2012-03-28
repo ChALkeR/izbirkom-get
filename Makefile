@@ -8,7 +8,7 @@ initalUrl	= $(regionName)?action=show&root=1&tvd=100100028713304&vrn=$(vrn)&regi
 
 
 test:
-	echo "http://$(baseUrl)$(initalUrl)"
+	@echo "http://$(baseUrl)$(initalUrl)"
 
 download: $(host)
 
