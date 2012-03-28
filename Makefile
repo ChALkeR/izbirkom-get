@@ -38,28 +38,36 @@ regionName	= st-petersburg
 #################################################
 # Adress parameters.
 # This doesn't need to be changed.
+# Changing this whill break things.
 #################################################
 host		= www.$(regionName).vybory.izbirkom.ru
 baseUrl		= $(host)/region/region/
 initalUrl	= $(regionName)?action=show&vrn=$(vrn)&type=$(type)
+part0		= $(regionName)?action=show&tvd=
+part1		= &vrn=$(vrn)&region=$(regionNum)&global=null&sub_region=$(regionNum)&prver=0&pronetvd=null&vibid=
+part2		= &type=$(type)
+baseUrlHttp	= http://$(baseUrl)
+downloadUrl	= $(baseUrlHttp)$(initalUrl)
 #################################################
 
+sedify		= | replace '/' '\/' '&' '\&'
+
 test:
-	@echo "http://$(baseUrl)$(initalUrl)"
+	@echo "$(downloadUrl)"
 
 download: $(host)
 
 $(host): 
-	wget -nc -np -r -R "jpg,css,xls,png,gif,js" "http://$(baseUrl)$(initalUrl)"
+	wget -nc -np -r -R "jpg,css,xls,png,gif,js" "$(downloadUrl)"
 
 data-html-all: $(host)
 	rm -rf $@;
 	cp -r $(baseUrl) $@;
 	cd $@; \
 		rm -f "$(initalUrl)"; \
-		rename "&type=$(type)" ".html" -- *; \
-		rename "$(regionName)?action=show&tvd=" "tvd" -- *; \
-		rename "&vrn=$(vrn)&region=$(regionNum)&global=null&sub_region=$(regionNum)&prver=0&pronetvd=null&vibid=" ".vibid" -- *; \
+		rename "$(part2)" ".html" -- *; \
+		rename "$(part0)" "tvd" -- *; \
+		rename "$(part1)" ".vibid" -- *; \
 
 # LANG=ru_RU.cp1251 grep `echo 'УИК' | iconv -t cp1251` *.html -L
 # and
@@ -77,12 +85,12 @@ data-raw.csv: data-html-clean
 	
 data-links.csv: data-raw.csv
 	cat data-raw.csv \
-		| sed -r ' s/ tvd([0-9]*)\.vibid([0-9]*)\.html/\0; http:\/\/$(host)\/region\/region\/$(regionName)?action=show\&tvd=\1\&vrn=$(vrn)\&region=$(regionNum)\&global=null\&sub_region=$(regionNum)\&prver=0\&pronetvd=null\&vibid=\2\&type=$(type)/' \
+		| sed -r "s/ tvd([0-9]*)\.vibid([0-9]*)\.html/\0; "`echo "$(baseUrlHttp)$(part0)" $(sedify)`"\1"` echo "$(part1)" $(sedify)`"\2"` echo "$(part2)" $(sedify)`"/" \
 		| replace ' Файл' ' Файл; Ссылка' \
 		> $@
 		
 url-list.txt:
-	ls $(host)/region/region/ | sed 's/^/http:\/\/$(host)\/region\/region\//' > $@
+	ls $(host)/region/region/ | sed "s/^/"`echo "$(baseUrlHttp)" $(sedify)`"/" > $@
 
 data-0-html-raw.tar.xz: $(host)
 	tar -caf $@ $(host)
