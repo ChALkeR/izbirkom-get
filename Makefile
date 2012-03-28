@@ -4,8 +4,7 @@ vrn		= 100100028713299
 
 host		= www.$(regionName).vybory.izbirkom.ru
 baseUrl		= $(host)/region/region/
-initalUrl	= $(regionName)?action=show&root=1&tvd=100100028713304&vrn=$(vrn)&region=$(regionNum)&global=null&sub_region=null&prver=0&pronetvd=null&vibid=100100028713304&type=233
-
+initalUrl	= $(regionName)?action=show&vrn=$(vrn)&type=233
 
 test:
 	@echo "http://$(baseUrl)$(initalUrl)"
