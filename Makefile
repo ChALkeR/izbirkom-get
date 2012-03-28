@@ -21,8 +21,8 @@ data-html-all: $(host)
 	cd $@; \
 		rm -f "$(initalUrl)"; \
 		rename "&type=233" ".html" -- *; \
-		rename "st-petersburg?action=show&tvd=" "tvd" -- *; \
-		rename "&vrn=$(vrn)&region=78&global=null&sub_region=78&prver=0&pronetvd=null&vibid=" ".vibid" -- *; \
+		rename "$(regionName)?action=show&tvd=" "tvd" -- *; \
+		rename "&vrn=$(vrn)&region=$(regionNum)&global=null&sub_region=$(regionNum)&prver=0&pronetvd=null&vibid=" ".vibid" -- *; \
 
 # LANG=ru_RU.cp1251 grep `echo 'УИК' | iconv -t cp1251` *.html -L
 # and
@@ -40,12 +40,12 @@ data-raw.csv: data-html-clean
 	
 data-links.csv: data-raw.csv
 	cat data-raw.csv \
-		| sed -r ' s/ tvd([0-9]*)\.vibid([0-9]*)\.html/\0; http:\/\/www.st-petersburg.vybory.izbirkom.ru\/region\/region\/st-petersburg?action=show\&tvd=\1\&vrn=100100028713299\&region=78\&global=null\&sub_region=78\&prver=0\&pronetvd=null\&vibid=\2\&type=233/' \
+		| sed -r ' s/ tvd([0-9]*)\.vibid([0-9]*)\.html/\0; http:\/\/$(host)\/region\/region\/$(regionName)?action=show\&tvd=\1\&vrn=$(vrn)\&region=$(regionNum)\&global=null\&sub_region=$(regionNum)\&prver=0\&pronetvd=null\&vibid=\2\&type=233/' \
 		| replace ' Файл' ' Файл; Ссылка' \
 		> $@
 		
 url-list.txt:
-	ls www.st-petersburg.vybory.izbirkom.ru/region/region/ | sed 's/^/http:\/\/www.st-petersburg.vybory.izbirkom.ru\/region\/region\//' > $@
+	ls $(host)/region/region/ | sed 's/^/http:\/\/$(host)\/region\/region\//' > $@
 
 data-0-html-raw.tar.xz: $(host)
 	tar -caf $@ $(host)
