@@ -1,0 +1,8 @@
+*~
+*.tar.xz
+*.csv
+*.ods
+*.png
+url-list.txt
+www.*
+data-*
