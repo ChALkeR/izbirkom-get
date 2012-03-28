@@ -1,13 +1,27 @@
 #################################################
-# This sets the election number and type
+# This sets the election number and type.
 #
 # Examples
 # 2011-12-04: vrn=100100028713299, type=233
 # 2012-03-04: vrn=100100031793505, type=227
 #
 #################################################
-vrn		= 100100031793505
-type		= 227
+vrn	= 100100031793505
+type	= 227
+#################################################
+
+
+#################################################
+# Sets the number of data fields in the table.
+# Specify this correcly.
+# TODO: auto-detect
+#
+# Examples
+# 2011-12-04: fields=25
+# 2012-03-04: fields=23
+#
+#################################################
+fields	= 23
 #################################################
 
 
@@ -59,7 +73,7 @@ data-html-clean: data-html-all
 		grep "TEXT-DECORATION: none" *.html -l | xargs rm; \
 
 data-raw.csv: data-html-clean
-	./extract.sh data-html-clean > $@;
+	./extract.sh data-html-clean $(fields) > $@;
 	
 data-links.csv: data-raw.csv
 	cat data-raw.csv \

@@ -2,7 +2,7 @@
 
 dir=$1
 inf=99999999
-fields=25
+fields=$2
 search="`echo 'Наименование Избирательной комиссии' | iconv -t cp1251`"
 height=$(($fields+1))
 
