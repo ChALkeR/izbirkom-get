@@ -38,7 +38,7 @@ regionName	= st-petersburg
 #################################################
 # Adress parameters.
 # This doesn't need to be changed.
-# Changing this whill break things.
+# Changing this will break things.
 #################################################
 host		= www.$(regionName).vybory.izbirkom.ru
 baseUrl		= $(host)/region/region/
