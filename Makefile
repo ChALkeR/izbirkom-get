@@ -75,9 +75,7 @@ data-html-clean: data-html-all
 	rm -rf $@;
 	cp -r data-html-all $@;
 	cd $@; \
-		grep "TEXT-DECORATION: none" *.html -l | xargs rm; \
-		# same as
-		# LANG=ru_RU.cp1251 grep `echo 'УИК' | iconv -t cp1251` *.html -L | xargs rm; \
+		LANG=ru_RU.cp1251 grep `echo УИК | iconv -t cp1251` -rL | xargs rm;
 
 data-raw.csv: data-html-clean
 	./extract.sh data-html-clean $(fields) > $@;
