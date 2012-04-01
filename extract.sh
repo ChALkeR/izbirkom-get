@@ -8,27 +8,27 @@ height=$(($fields+1))
 
 function parse_file() {
 	local file="$dir/$1"
-	local name="`LANG=ru_RU.cp1251 grep "$search" $file -A 2 \
+	local name="`iconv -f cp1251 $file \
+		| grep "$search" -A 2 \
 		| tail -1 \
 		| sed -r 's/(\r|<[^>]*>)//g' \
 		| sed -r 's/(^\s*|\s*$)//g' \
-		| iconv -f cp1251 -t utf-8`"
-	local catg="`cat "$file" \
+		`"
+	local catg="`iconv -f cp1251 $file \
 		| grep '&gt;' \
-		| iconv -f cp1251 -t utf-8 \
 		| sed -r 's/(\r|<[^>]*>)//g' \
 		| sed -r 's/(^\s*|\s*$)//g' \
 		| sed -r 's/&gt;\s*//' \
 		| grep '&gt;' \
 		| sed -r 's/\s*&gt;.*//g'
 		`"
-	local data=`cat "$file" \
+	local data="`iconv -f cp1251 $file \
 		| grep '<td width="90%">' -A $inf \
 		| grep '</table><br></div></td>' -B $inf \
 		| grep '<nobr>' \
 		| sed -r 's/(\r|<[^>]*>)//g' \
 		| sed -r 's/(^\s*|\s*$)//g' \
-		| iconv -f cp1251 -t utf-8`
+		`"
 	local width=`echo "$data" | grep -c 'УИК'`
 
 	local size=`echo "$data" | wc -l`
@@ -55,15 +55,15 @@ function parse_file() {
 
 function show_head {
 	local file="$dir/$1"
-	local data=`cat "$file" \
+	local data="`iconv -f cp1251 $file \
 		| grep '<td style="height:100%;" valign="top" align="left">' -A $inf \
 		| grep '<nobr>' \
 		| grep '</nobr>' \
 		| sed -r 's/(\r|<[^>]*>)//g' \
 		| sed -r 's/(^\s*|\s*$)//g' \
 		| grep ' ' \
-		| iconv -f cp1251 -t utf-8 \
-		| head -$fields`
+		| head -$fields
+		`"
 	echo -n "Регион; ИК; УИК; "
 	echo "$data" | tr '\n' ';' | replace ';' '; '
 	echo "Файл"
