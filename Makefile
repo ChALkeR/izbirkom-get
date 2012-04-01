@@ -113,7 +113,7 @@ data-3-csv-raw.tar.xz: data-raw.csv
 data-4-csv-links.tar.xz: data-links.csv
 	tar -caf $@ data-links.csv
 
-data-5-csv-light.tar.xz: data-links.csv
+data-5-csv-light.tar.xz: data-light.csv
 	tar -caf $@ data-light.csv
 
 info:
