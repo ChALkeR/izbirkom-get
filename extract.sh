@@ -3,13 +3,12 @@
 dir=$1
 inf=99999999
 fields=$2
-search="`echo 'Наименование Избирательной комиссии' | iconv -t cp1251`"
 height=$(($fields+1))
 
 function parse_file() {
 	local file="$dir/$1"
 	local name="`iconv -f cp1251 $file \
-		| grep "$search" -A 2 \
+		| grep "Наименование Избирательной комиссии" -A 2 \
 		| tail -1 \
 		| sed -r 's/(\r|<[^>]*>)//g' \
 		| sed -r 's/(^\s*|\s*$)//g' \
