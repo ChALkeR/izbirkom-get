@@ -2,7 +2,19 @@
 
 dir=$1
 inf=99999999
+
 fields=$2
+if [ -z "$fields" ]; then
+	echo "Auto-detecting fields count…" > /dev/stderr
+	fields_auto=`grep '<td width="5%" style="color:black">' "$dir" -r -c | sed s/'.*:'// | uniq`
+	if [ "`echo \"$fields_auto\" | wc -l`" -ne "1" ]; then
+		echo "Error: auto-detected fields count is not constant" > /dev/stderr
+		exit -1;
+	fi
+	fields=$fields_auto
+	echo "Fields count determined and validated: $fields" > /dev/stderr
+fi
+
 height=$(($fields+1))
 
 function parse_file() {
@@ -69,7 +81,7 @@ function show_head {
 }
 
 head_shown=
-for i in `ls $1`
+for i in `ls "$dir"`
 do
 	if [[ -z $head_shown ]]
 	then

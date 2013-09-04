@@ -13,15 +13,15 @@ type	= 227
 
 #################################################
 # Sets the number of data fields in the table.
-# Specify this correcly.
-# TODO: auto-detect
+# Empty means auto-detect.
+# You probably will not need to specify this.
 #
 # Examples
 # 2011-12-04: fields=25
 # 2012-03-04: fields=23
 #
 #################################################
-fields	= 23
+fields	=
 #################################################
 
 
