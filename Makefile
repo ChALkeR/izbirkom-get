@@ -81,7 +81,7 @@ data-html-clean: data-html-all-utf
 	rm -rf $@;
 	cp -r data-html-all-utf $@;
 	cd $@; \
-		grep 'УИК' -rL | xargs -n10 rm;
+		grep 'УИК' -rL | xargs -n10 rm -f;
 
 data-raw.csv: data-html-clean
 	./extract.sh data-html-clean $(fields) > $@;
