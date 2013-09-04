@@ -7,13 +7,13 @@ height=$(($fields+1))
 
 function parse_file() {
 	local file="$dir/$1"
-	local name="`iconv -f cp1251 $file \
+	local name="`cat $file \
 		| grep "Наименование Избирательной комиссии" -A 2 \
 		| tail -1 \
 		| sed -r 's/(\r|<[^>]*>)//g' \
 		| sed -r 's/(^\s*|\s*$)//g' \
 		`"
-	local catg="`iconv -f cp1251 $file \
+	local catg="`cat $file \
 		| grep '&gt;' \
 		| sed -r 's/(\r|<[^>]*>)//g' \
 		| sed -r 's/(^\s*|\s*$)//g' \
@@ -21,7 +21,7 @@ function parse_file() {
 		| grep '&gt;' \
 		| sed -r 's/\s*&gt;.*//g'
 		`"
-	local data="`iconv -f cp1251 $file \
+	local data="`cat $file \
 		| grep '<td width="90%">' -A $inf \
 		| grep '</table><br></div></td>' -B $inf \
 		| grep '<nobr>' \
@@ -54,7 +54,7 @@ function parse_file() {
 
 function show_head {
 	local file="$dir/$1"
-	local data="`iconv -f cp1251 $file \
+	local data="`cat $file \
 		| grep '<td style="height:100%;" valign="top" align="left">' -A $inf \
 		| grep '<nobr>' \
 		| grep '</nobr>' \

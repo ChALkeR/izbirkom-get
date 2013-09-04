@@ -71,11 +71,17 @@ data-html-all: $(host)
 		rename "$(part0)" "tvd" -- *; \
 		rename "$(part1)" ".vibid" -- *; \
 
-data-html-clean: data-html-all
+data-html-all-utf: data-html-all
 	rm -rf $@;
-	cp -r data-html-all $@;
+	mkdir $@;
+	cd data-html-all; \
+		find . -type f -exec iconv -f cp1251 -t utf-8 "{}" -o "../$@/{}" \;
+
+data-html-clean: data-html-all-utf
+	rm -rf $@;
+	cp -r data-html-all-utf $@;
 	cd $@; \
-		LANG=ru_RU.cp1251 grep `echo УИК | iconv -t cp1251` -rL | xargs -n10 rm;
+		grep 'УИК' -rL | xargs -n10 rm;
 
 data-raw.csv: data-html-clean
 	./extract.sh data-html-clean $(fields) > $@;
