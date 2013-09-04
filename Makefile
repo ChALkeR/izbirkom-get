@@ -75,7 +75,7 @@ data-html-clean: data-html-all
 	rm -rf $@;
 	cp -r data-html-all $@;
 	cd $@; \
-		LANG=ru_RU.cp1251 grep `echo УИК | iconv -t cp1251` -rL | xargs rm;
+		LANG=ru_RU.cp1251 grep `echo УИК | iconv -t cp1251` -rL | xargs -n10 rm;
 
 data-raw.csv: data-html-clean
 	./extract.sh data-html-clean $(fields) > $@;
