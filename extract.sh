@@ -46,7 +46,7 @@ function parse_file() {
 	local size0=$(($height*$width))
 	if [[ $size -ne $size0 ]]
 	then
-		echo "Error" > /dev/stderr
+		echo "Error: $size != $size0 in $file" > /dev/stderr
 		exit -1
 	fi
 
